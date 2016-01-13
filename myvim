@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# https://github.com/junegunn/myvim
+# https://github.com/alok/myNvim
 
 set -u
 set -e
@@ -8,12 +8,12 @@ EDIT=0
 COMPRESS=-z
 OUTPUT=vim.$(whoami)
 GREPV="cat"
-VIMRC=.vimrc
+VIMRC=.config/nvim/.init.vim
 if [ ! -e ~/$VIMRC ]; then
-  if [ -e ~/.vim/vimrc ]; then
-    VIMRC=.vim/vimrc
+  if [ -e ~/.config/nvim/init.vim ]; then
+    VIMRC=.config/nvim/init.vim
   else
-    >&2 echo "~/.vimrc (or ~/.vim/vimrc) not found"
+    >&2 echo "~/.config/nvim/init.vim not found"
     exit 1
   fi
 fi
@@ -79,7 +79,7 @@ generate() {
     FILES=$(list)
   fi
 
-  TEMP=/tmp/myvim-$(whoami).tar.compressed
+  TEMP=/tmp/myNvim-$(whoami).tar.compressed
   tar -C ~ -h $COMPRESS -cf $TEMP -T <(echo "$FILES")
 
   MD5=$(get_md5 "$TEMP")
@@ -90,27 +90,27 @@ generate() {
 if [ "$1" == --hard ]; then
   HARD=1
   BASE=~
-  echo "** Overwriting ~/.vim and ~/'"$VIMRC"' **"
-  for e in ~/.vim ~/'"$VIMRC"'; do
+  echo "** Overwriting ~/.config/nvim and ~/'"$VIMRC"' **"
+  for e in ~/.config/nvim ~/'"$VIMRC"'; do
     rm -rf ${e}.bak
     [ -e $e ] && mv ${e} ${e}.bak
   done
   shift
 else
   HARD=""
-  BASE=/tmp/myvim-$(whoami)/'$MD5'
+  BASE=/tmp/myNvim-$(whoami)/'$MD5'
 fi
 
 set -eu
 
-if [ ! -d $BASE/.vim ]; then
-  >&2 echo "Extracting Vim environment to $BASE"
+if [ ! -d $BASE/config/nvim ]; then
+  >&2 echo "Extracting Neovim environment to $BASE"
   mkdir -p $BASE
   sed "1,/^# EOF #$/d" "$0" | tar -C $BASE -x '$COMPRESS'
   [ -z "$HARD" ] && (cd $BASE
    mv -f '"$VIMRC"' '"$VIMRC"'.org
    echo "let [s:home_org, \$HOME] = [\$HOME, \"$BASE\"]" > '"$VIMRC"'
-   echo "set rtp^=$BASE/.vim" >> '"$VIMRC"'
+   echo "set rtp^=$BASE/.config/nvim" >> '"$VIMRC"'
    echo "autocmd VimEnter * let \$HOME = s:home_org" >> '"$VIMRC"'
    cat '"$VIMRC"'.org >> '"$VIMRC"'
    echo "let \$HOME = s:home_org" >> '"$VIMRC"'
@@ -126,9 +126,8 @@ exit $?
   rm -f "$TEMP"
 }
 
-if [ ! -e ~/.vim ]; then
-  mkdir -p ~/.vim
+if [ ! -e ~/.config/nvim ]; then
+  mkdir -p ~/.config/nvim
 fi
 
 generate
-

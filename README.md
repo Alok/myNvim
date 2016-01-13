@@ -1,15 +1,15 @@
-myvim
+myNvim
 =====
 
-A script that creates a portable bundle of your Vim environment.
+A script that creates a portable bundle of your Neovim environment.
 
 Usage
 -----
 
-`myvim` script will create an executable named `vim.$(whoami)`.
+`myNvim` script will create an executable named `nvim.$(whoami)`.
 
 ```sh
-bash <(curl -fL https://raw.githubusercontent.com/junegunn/myvim/master/myvim)
+bash <(curl -fL https://raw.githubusercontent.com/alok/myNvim/master/myNvim)
 ```
 
 ### Options
@@ -25,7 +25,7 @@ bash <(curl -fL https://raw.githubusercontent.com/junegunn/myvim/master/myvim)
 Why?
 ----
 
-You want your Vim settings and plugins on whichever server you connect to. But
+You want your Neovim settings and plugins on whichever server you connect to. But
 having your .vimrc on GitHub or Bitbucket is usually not enough. Because:
 
 - You need Git and free access to internet
@@ -36,8 +36,8 @@ having your .vimrc on GitHub or Bitbucket is usually not enough. Because:
 How does it work?
 -----------------
 
-`myvim` creates a tar archive of your .vimrc and .vim directory and append it
-to a small bash script that starts Vim with your usual settings and plugins.
+`myNvim` creates a tar archive of your .vimrc and .vim directory and append it
+to a small bash script that starts Neovim with your usual settings and plugins.
 
 Caveat
 ------
@@ -46,3 +46,6 @@ The generated script injects code for temporarily swapping `$HOME` variable
 around the vimrc in the archive. This is because most vimrcs contain
 references to home directory (e.g. `call plug#begin('~/.vim/plugged')`).
 
+
+### NOTE
+Neovim must be installed on your remote machine, else this will not work.
